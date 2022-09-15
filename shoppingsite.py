@@ -6,10 +6,11 @@ put melons in a shopping cart.
 Authors: Joel Burton, Christian Fernandez, Meggie Mahnken, Katie Byers.
 """
 
-from flask import Flask, session, render_template, redirect, flash
+from flask import Flask, session, render_template, redirect, flash, request
 import jinja2
 
 import melons
+import customers
 
 app = Flask(__name__)
 
@@ -151,7 +152,7 @@ def add_to_cart(melon_id):
 @app.route("/login", methods=["GET"])
 def show_login():
     """Show login form."""
-    
+
     return render_template("login.html")
 
 
@@ -162,8 +163,36 @@ def process_login():
     Find the user's login credentials located in the 'request.form'
     dictionary, look up the user, and store them in the session.
     """
+  
+    email = request.form['email']
+    pw = request.form['password']
+    print('in login route')
+    print(email)
+    print(pw)
+#make sure at the top of the file you import customers or it wont be accessed.
+#customers is referring to the file name, not the global list at the end of
+#customers.py
+    customer = customers.get_by_email(email)
+    print(customer)
+    print(type(customer))
+    print(customer.password)
 
-    # TODO: Need to implement this!
+    if customer:
+        print(session)
+        if customer.password == pw:
+            session[email] = customer.email
+            print(session)
+            print(session[email])
+            flash('Login successful!')
+            return redirect('/melons')
+        else:
+            flash('Incorrect password. Login unsuccessful.')
+            return redirect('/login')
+    else:
+       flash('No user found. Login unseccessful.')
+       return redirect('/login') 
+
+
 
     # The logic here should be something like:
     #
@@ -176,8 +205,6 @@ def process_login():
     #   message and redirect the user to the "/melons" route
     # - if they don't, flash a failure message and redirect back to "/login"
     # - do the same if a Customer with that email doesn't exist
-
-    return "Oops! This needs to be implemented"
 
 
 @app.route("/checkout")
