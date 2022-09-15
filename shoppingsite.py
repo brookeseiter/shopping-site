@@ -205,9 +205,13 @@ def process_login():
 
 @app.route("/logout")
 def process_logout():
-    """Logs out customer."""
-    
-    return "Oops this will be implemted later!"
+    """Logs out customer. Takes them back to homepage."""
+
+    print(session)
+    del session["logged_in_email"]
+    print(session)
+
+    return redirect("/melons")
 
 @app.route("/checkout")
 def checkout():
@@ -217,6 +221,7 @@ def checkout():
     # scope of this exercise.
 
     flash("Sorry! Checkout will be implemented in a future version.")
+
     return redirect("/melons")
 
 
