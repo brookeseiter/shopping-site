@@ -180,9 +180,8 @@ def process_login():
     if customer:
         print(session)
         if customer.password == pw:
-            session[email] = customer.email
+            session["logged_in_email"] = customer.email
             print(session)
-            print(session[email])
             flash('Login successful!')
             return redirect('/melons')
         else:
@@ -191,8 +190,6 @@ def process_login():
     else:
        flash('No user found. Login unseccessful.')
        return redirect('/login') 
-
-
 
     # The logic here should be something like:
     #
@@ -206,6 +203,11 @@ def process_login():
     # - if they don't, flash a failure message and redirect back to "/login"
     # - do the same if a Customer with that email doesn't exist
 
+@app.route("/logout")
+def process_logout():
+    """Logs out customer."""
+    
+    return "Oops this will be implemted later!"
 
 @app.route("/checkout")
 def checkout():
