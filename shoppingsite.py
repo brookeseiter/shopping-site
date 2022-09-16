@@ -166,30 +166,30 @@ def process_login():
   
     email = request.form['email']
     pw = request.form['password']
-    print('in login route')
-    print(email)
-    print(pw)
+    # print(email)
+    # print(pw)
 #make sure at the top of the file you import customers or it wont be accessed.
-#customers is referring to the file name, not the global list at the end of
+#customers is referring to the file name, not the global var at the end of
 #customers.py
     customer = customers.get_by_email(email)
+    
+    if not customer:
+        flash('No user found. Login unsuccessful.')
+        return redirect('/login') 
+
+    print(customer.password)
     print(customer)
     print(type(customer))
-    print(customer.password)
 
-    if customer:
+    if customer.password == pw:
+        session["logged_in_email"] = customer.email
         print(session)
-        if customer.password == pw:
-            session["logged_in_email"] = customer.email
-            print(session)
-            flash('Login successful!')
-            return redirect('/melons')
-        else:
-            flash('Incorrect password. Login unsuccessful.')
-            return redirect('/login')
+        flash('Login successful!')
+        return redirect('/melons')
     else:
-       flash('No user found. Login unseccessful.')
-       return redirect('/login') 
+        flash('Incorrect password. Login unsuccessful.')
+        return redirect('/login')
+    
 
     # The logic here should be something like:
     #
